@@ -1,10 +1,9 @@
-FROM alpine:3.9
+FROM debian:buster-slim
 
-RUN apk update \
- && apk add dovecot dovecot-lmtpd dovecot-sqlite dovecot-pigeonhole-plugin dovecot-pigeonhole-plugin-ldap dovecot-pop3d dovecot-ldap dovecot-fts-lucene luajit
+RUN apt-get update \
+ && apt-get install -y dovecot-imapd dovecot-lmtpd dovecot-sqlite dovecot-sieve dovecot-managesieved dovecot-pop3d dovecot-ldap dovecot-lucene dovecot-auth-lua
 
-RUN addgroup -S vmail \
- && adduser -S -h "/var/lib/vmail" -s "/bin/false" -g vmail vmail
+RUN adduser --system --group --home "/var/lib/vmail" --disabled-login --disabled-password vmail
 
 ENTRYPOINT ["dovecot", "-F"]
 
