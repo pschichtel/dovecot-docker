@@ -23,5 +23,8 @@ COPY rspamc.sh /usr/local/bin/rspamc
 COPY sieve /etc/dovecot/sieve
 COPY entrypoint.sh /docker-entrypoint.sh
 
+COPY mailmanager/auth-mailmanager.auth /etc/dovecot/auth-mailmanager.lua
+COPY mailmanager/auth-mailmanager.conf /etc/dovecot/conf.d/auth-mailmanager.conf.ext
+
 ENTRYPOINT ["/docker-entrypoint.sh"]
 

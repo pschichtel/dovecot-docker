@@ -1,10 +1,10 @@
 
 -- Configuration
-local base_url = "http://localhost:9000/api/mailbox/"
-local passdb_endpoint = base_url .. "authenticate"
-local userdb_endpoint = base_url .. "lookup"
+local base_url = os.getenv("MAILMANAGER_BASE_URL")
+local passdb_endpoint = base_url .. "/api/mailbox/authenticate"
+local userdb_endpoint = base_url .. "/api/mailbox/lookup"
 local request_headers = {
-    ["X-Auth-Token"] = "test123"
+    ["X-Auth-Token"] = os.getenv("MAILMANAGER_AUTH_TOKEN")
 }
 local static_values = {
 }
@@ -15,7 +15,7 @@ local http = require("socket.http")
 local json = require("json")
 
 function script_init()
-    print("auth-mailmanager started!")
+    print("auth-mailmanager started! MailManager: " .. base_url)
     return 0
 end
 
