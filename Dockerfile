@@ -18,5 +18,7 @@ RUN apt-get update \
 RUN addgroup --system --gid 5000 vmail \
  && adduser --system --uid 5000 --ingroup vmail --home "/var/lib/vmail" --disabled-login --disabled-password vmail
 
+COPY rspamc.sh /usr/local/bin/rspamc
+
 ENTRYPOINT ["dovecot", "-F"]
 
