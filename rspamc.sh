@@ -1,5 +1,7 @@
 #!/usr/bin/env sh
 
+. /etc/default/rspamc
+
 if [ -n "${RSPAMD_CONTROLLER_ADDRESS:-}" ]
 then
     if [ -n "${RSPAMD_CONTROLLER_PASSWORD_FILE:-}" -a -r "${RSPAMD_CONTROLLER_PASSWORD_FILE}" ]

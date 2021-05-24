@@ -22,11 +22,15 @@ RUN addgroup --system --gid 5000 vmail \
  && adduser --system --uid 5000 --ingroup vmail --home "/var/lib/vmail" --disabled-login --disabled-password vmail
 
 COPY rspamc.sh /usr/local/bin/rspamc
-COPY sieve /etc/dovecot/sieve
 COPY entrypoint.sh /docker-entrypoint.sh
 
 COPY auth-mailmanager.lua /etc/dovecot/auth-mailmanager.lua
 COPY conf.d/* /etc/dovecot/conf.d/
+
+COPY sieve /etc/dovecot/sieve
+RUN find /etc/dovecot/sieve/ -type f -name '*.sieve' -exec sievec "{}" \;
+
+COPY sieve-pipe /usr/lib/dovecot/sieve-pipe
 
 VOLUME [ "/var/lib/vmail" ]
 
