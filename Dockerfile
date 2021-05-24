@@ -14,7 +14,7 @@ RUN apt-get update \
  && apt-get update
 
 RUN apt-get update \
- && apt-get install -y --no-install-recommends dovecot-imapd dovecot-lmtpd dovecot-sqlite dovecot-sieve dovecot-managesieved dovecot-pop3d dovecot-ldap dovecot-lucene dovecot-auth-lua lua-socket lua-json rspamd
+ && apt-get install -y --no-install-recommends dovecot-imapd dovecot-lmtpd dovecot-sieve dovecot-managesieved dovecot-lucene dovecot-auth-lua lua-socket lua-json rspamd
 
 RUN addgroup --system --gid 5000 vmail \
  && adduser --system --uid 5000 --ingroup vmail --home "/var/lib/vmail" --disabled-login --disabled-password vmail
