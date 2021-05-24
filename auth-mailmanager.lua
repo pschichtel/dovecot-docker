@@ -1,25 +1,28 @@
-
--- Configuration
-local base_url = os.getenv("MAILMANAGER_BASE_URL")
-local passdb_endpoint = base_url .. "/api/mailbox/authenticate"
-local userdb_endpoint = base_url .. "/api/mailbox/lookup"
-local request_headers = {
-    ["X-Auth-Token"] = os.getenv("MAILMANAGER_AUTH_TOKEN")
-}
-local static_values = {
-}
--- End of Configuration
+local base_url = "https://localhost"
+local static_values = {}
+local request_headers = {}
 
 local ltn12 = require("ltn12")
 local http = require("socket.http")
 local json = require("json")
 
 function script_init()
-    print("auth-mailmanager started! MailManager: " .. base_url)
-    return 0
+    local confEnv = {}
+    local confModule, err = loadfile("/etc/dovecot/mailmanager.conf", "t", confEnv)
+    if confModule then
+        confModule()
+        base_url = confEnv.base_url
+        request_headers["X-Auth-Token"] = confEnv.auth_token
+        print("auth-mailmanager started! MailManager: " .. base_url)
+        return 0
+    else
+        dovecot.i_error("auth-mailmanager init error: " .. err)
+        return 1
+    end
 end
 
 function script_deinit()
+    print("auth-mailmanager stopped!")
 end
 
 function auth_password_verify(req, password)
@@ -28,12 +31,13 @@ function auth_password_verify(req, password)
         password = password
     }
 
+    local passdb_endpoint = base_url .. "/api/mailbox/authenticate"
     local code, status, response_body = json_request(passdb_endpoint, payload)
 
     if code == 200 then
         local result = protected_decode(response_body)
         if next(result) == nil then
-            req.log_error("Response body: " .. response_body)
+            req.log_error(req, "Response body: " .. response_body)
             return dovecot.auth.PASSDB_RESULT_INTERNAL_FAILURE, "request failed (invalid response)"
         end
 
@@ -49,12 +53,12 @@ function auth_password_verify(req, password)
     end
 
     if code >= 400 and code < 500 then
-        req.log_error("Response status: " .. status)
+        req.log_error(req, "Response status: " .. status)
         return dovecot.auth.PASSDB_RESULT_INTERNAL_FAILURE, "request failed (client error)"
     end
 
     if code >= 500 then
-        req.log_error("Response status: " .. status)
+        req.log_error(req, "Response status: " .. status)
         return dovecot.auth.PASSDB_RESULT_INTERNAL_FAILURE, "request failed (server error)"
     end
 
@@ -66,12 +70,13 @@ function auth_userdb_lookup(req)
         mailbox = req.username,
     }
 
+    local userdb_endpoint = base_url .. "/api/mailbox/lookup"
     local code, status, response_body = json_request(userdb_endpoint, payload)
 
     if code == 200 then
         local result = protected_decode(response_body)
         if next(result) == nil then
-            req.log_error("Response body: " .. response_body)
+            req.log_error(req, "Response body: " .. response_body)
             return dovecot.auth.USERDB_RESULT_INTERNAL_FAILURE, "request failed (invalid response)"
         end
 
@@ -83,28 +88,33 @@ function auth_userdb_lookup(req)
     end
 
     if code >= 400 and code < 500 then
-        req.log_error("Response status: " .. status)
+        req.log_error(req, "Response status: " .. status)
         return dovecot.auth.USERDB_RESULT_INTERNAL_FAILURE, "request failed (client error)"
     end
 
     if code >= 500 then
-        req.log_error("Response status: " .. status)
+        req.log_error(req, "Response status: " .. status)
         return dovecot.auth.USERDB_RESULT_INTERNAL_FAILURE, "request failed (server error)"
     end
 end
 
 function json_request(url, payload)
     local request_body = json.encode(payload)
+    local request_headers = tableMerge(request_headers, {
+        ["Content-Type"] = "application/json",
+        ["Content-Length"] = tostring(string.len(request_body))
+    })
+
+    -- print(url)
+    -- print(request_body)
+    -- print(json.encode(request_headers))
 
     local response_sink = {}
     local request = {
         url = url,
         method = "POST",
         redirect = true,
-        headers = tableMerge(request_headers, {
-            ["Content-Type"] = "application/json",
-            ["Content-Length"] = tostring(string.len(request_body))
-        }),
+        headers = request_headers,
         source = ltn12.source.string(request_body),
         sink = ltn12.sink.table(response_sink)
     }
