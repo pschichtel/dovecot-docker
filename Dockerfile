@@ -27,8 +27,8 @@ COPY entrypoint.sh /docker-entrypoint.sh
 COPY auth-mailmanager.lua /etc/dovecot/auth-mailmanager.lua
 COPY conf.d/* /etc/dovecot/conf.d/
 
-COPY sieve /etc/dovecot/sieve
-RUN find /etc/dovecot/sieve/ -type f -name '*.sieve' -exec sievec "{}" \;
+COPY sieve /usr/lib/dovecot/sieve
+RUN find /usr/lib/dovecot/sieve/ -type f -name '*.sieve' -exec sievec "{}" \;
 
 COPY sieve-pipe /usr/lib/dovecot/sieve-pipe
 
