@@ -1,6 +1,6 @@
-FROM debian:buster-slim
+FROM debian:bullseye-slim
 
-ARG DOVECOT_VERSION="1:2.3.4.1-5+deb10u6"
+ARG DOVECOT_VERSION="1:2.3.13+dfsg1-2"
 
 LABEL maintainer="Phillip Schichtel <phillip@schich.tel>"
 
@@ -9,8 +9,8 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update \
  && apt-get dist-upgrade -y \
  && apt-get install --no-install-recommends -y gnupg ca-certificates \
- && apt-key adv --keyserver ha.pool.sks-keyservers.net --recv-keys 3FA347D5E599BE4595CA2576FFA232EDBF21E25E \
- && echo "deb http://rspamd.com/apt-stable/ buster main" > /etc/apt/sources.list.d/rspamd.list \
+ && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3FA347D5E599BE4595CA2576FFA232EDBF21E25E \
+ && echo "deb http://rspamd.com/apt-stable/ bullseye main" > /etc/apt/sources.list.d/rspamd.list \
  && apt-get purge -y gnupg \
  && apt-get autoremove --purge -y \
  && apt-get update
