@@ -1,17 +1,16 @@
 FROM debian:bullseye-slim
 
-ARG DOVECOT_VERSION="1:2.3.13+dfsg1-2"
+ARG DOVECOT_VERSION="1:2.3.13+dfsg1-2+deb11u1"
 
 LABEL maintainer="Phillip Schichtel <phillip@schich.tel>"
 
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update \
- && apt-get dist-upgrade -y \
- && apt-get install --no-install-recommends -y gnupg ca-certificates \
- && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3FA347D5E599BE4595CA2576FFA232EDBF21E25E \
- && echo "deb http://rspamd.com/apt-stable/ bullseye main" > /etc/apt/sources.list.d/rspamd.list \
- && apt-get purge -y gnupg \
+ && apt-get install --no-install-recommends -y curl gnupg ca-certificates \
+ && curl -fsSL "https://rspamd.com/apt-stable/gpg.key" | gpg --batch --yes --dearmor -o "/usr/share/keyrings/rspamd.gpg" \
+ && echo "deb [signed-by=/usr/share/keyrings/rspamd.gpg] http://rspamd.com/apt-stable/ bullseye main" > /etc/apt/sources.list.d/rspamd.list \
+ && apt-get purge -y gnupg curl \
  && apt-get autoremove --purge -y \
  && apt-get update
 
