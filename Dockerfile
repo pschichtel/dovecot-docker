@@ -1,6 +1,10 @@
-FROM debian:bullseye-slim
+ARG DEBIAN_CODENAME="bookworm"
 
-ARG DOVECOT_VERSION="1:2.3.13+dfsg1-2+deb11u1"
+FROM debian:${DEBIAN_CODENAME}-slim
+
+ARG DEBIAN_CODENAME
+
+ARG DOVECOT_VERSION="1:2.3.19.1+dfsg1-2.1"
 
 LABEL maintainer="Phillip Schichtel <phillip@schich.tel>"
 
@@ -9,7 +13,7 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update \
  && apt-get install --no-install-recommends -y curl gnupg ca-certificates \
  && curl -fsSL "https://rspamd.com/apt-stable/gpg.key" | gpg --batch --yes --dearmor -o "/usr/share/keyrings/rspamd.gpg" \
- && echo "deb [signed-by=/usr/share/keyrings/rspamd.gpg] http://rspamd.com/apt-stable/ bullseye main" > /etc/apt/sources.list.d/rspamd.list \
+ && echo "deb [signed-by=/usr/share/keyrings/rspamd.gpg] http://rspamd.com/apt-stable/ ${DEBIAN_CODENAME} main" > /etc/apt/sources.list.d/rspamd.list \
  && apt-get purge -y gnupg curl \
  && apt-get autoremove --purge -y \
  && apt-get update
