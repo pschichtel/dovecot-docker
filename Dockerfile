@@ -4,8 +4,6 @@ FROM debian:${DEBIAN_CODENAME}-slim
 
 ARG DEBIAN_CODENAME
 
-ARG DOVECOT_VERSION="1:2.3.19.1+dfsg1-2.1"
-
 LABEL maintainer="Phillip Schichtel <phillip@schich.tel>"
 
 ENV DEBIAN_FRONTEND noninteractive
@@ -19,7 +17,7 @@ RUN apt-get update \
  && apt-get update
 
 RUN apt-get update \
- && apt-get install -y --no-install-recommends dovecot-imapd="$DOVECOT_VERSION" dovecot-lmtpd="$DOVECOT_VERSION" dovecot-sieve="$DOVECOT_VERSION" dovecot-managesieved="$DOVECOT_VERSION" dovecot-lucene="$DOVECOT_VERSION" dovecot-solr="$DOVECOT_VERSION" dovecot-auth-lua="$DOVECOT_VERSION" lua-socket lua-json rspamd
+ && apt-get install -y --no-install-recommends dovecot-imapd dovecot-lmtpd dovecot-sieve dovecot-managesieved dovecot-lucene dovecot-solr dovecot-auth-lua lua-socket lua-json rspamd
 
 RUN addgroup --system --gid 5000 vmail \
  && adduser --system --uid 5000 --ingroup vmail --home "/var/lib/vmail" --disabled-login --disabled-password vmail
