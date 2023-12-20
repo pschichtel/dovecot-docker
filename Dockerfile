@@ -1,4 +1,4 @@
-ARG DEBIAN_CODENAME="bookworm"
+ARG DEBIAN_CODENAME="bullseye"
 
 FROM debian:${DEBIAN_CODENAME}-slim
 
@@ -18,9 +18,6 @@ RUN apt-get update \
 
 RUN apt-get update \
  && apt-get install -y --no-install-recommends dovecot-imapd dovecot-lmtpd dovecot-sieve dovecot-managesieved dovecot-solr dovecot-auth-lua lua-socket lua-json rspamd
-
-RUN cp -a /usr/share/lua/5.1/json.lua /usr/share/lua/5.4/json.lua \
- && cp -a /usr/share/lua/5.1/json /usr/share/lua/5.4/json
 
 RUN addgroup --system --gid 5000 vmail \
  && adduser --system --uid 5000 --ingroup vmail --home "/var/lib/vmail" --disabled-login --disabled-password vmail
