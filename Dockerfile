@@ -1,4 +1,4 @@
-ARG DEBIAN_CODENAME="bookworm"
+ARG DEBIAN_CODENAME="trixie"
 
 FROM debian:${DEBIAN_CODENAME}-slim
 
