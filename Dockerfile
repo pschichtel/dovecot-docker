@@ -1,8 +1,6 @@
 ARG DEBIAN_CODENAME
 
-FROM debian:${DEBIAN_CODENAME}-slim
-
-ARG DEBIAN_CODENAME
+FROM docker.io/library/debian:${DEBIAN_CODENAME}-slim
 
 LABEL maintainer="Phillip Schichtel <phillip@schich.tel>"
 
