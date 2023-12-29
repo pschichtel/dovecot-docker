@@ -26,7 +26,7 @@ jobs:
       run: |
         repo_name="ghcr.io/pschichtel/dovecot"
         tmp_image_name="$repo_name:latest"
-        podman build --buildarg DEBIAN_CODENAME="$DEBIAN_CODENAME" -t "$tmp_image_name" .
+        podman build --build-arg DEBIAN_CODENAME="$DEBIAN_CODENAME" -t "$tmp_image_name" .
         version="$(podman run --rm --entrypoint sh "$tmp_image_name" -c 'dovecot --version | grep -Po "^\S+"')"
         major_version="$(echo "$version" | cut -d'.' -f1)"
         podman tag "$tmp_image_name" "$repo_name:$DEBIAN_CODENAME" "$repo_name:$version-$DEBIAN_CODENAME" "$repo_name:$major_version-$DEBIAN_CODENAME"
