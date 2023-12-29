@@ -24,5 +24,5 @@ jobs:
         podman tag "$tmp_image_name" "$repo_name:$codename" "$repo_name:$version-$codename" "$repo_name:$major_version-$codename"
         podman push "$repo_name:$codename"
         podman push "$repo_name:$version-$codename"
-        podman push "$repo_name:$$major_version-$codename"
+        podman push "$repo_name:$major_version-$codename"
 
