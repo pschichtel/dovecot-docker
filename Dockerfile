@@ -1,6 +1,6 @@
-ARG DEBIAN_CODENAME
+ARG BASE_IMAGE="docker.io/library/debian:bullseye"
 
-FROM docker.io/library/debian:${DEBIAN_CODENAME}-slim
+FROM $BASE_IMAGE
 
 LABEL maintainer="Phillip Schichtel <phillip@schich.tel>"
 

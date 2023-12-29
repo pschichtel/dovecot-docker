@@ -6,11 +6,12 @@ jobs:
   build:
     strategy:
       matrix:
-        codename:
-          - bullseye
-          - bookworm
-          - trixie
-          - sid
+        baseImage:
+          - docker.io/library/debian:bullseye-slim
+          - docker.io/library/debian:sid-slim
+          - docker.io/library/ubuntu:jammy
+          - docker.io/library/ubuntu:mantic
+          - docker.io/library/ubuntu:noble
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -22,15 +23,16 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
     - name: Build the Docker image
       env:
-        DEBIAN_CODENAME: ${{ matrix.codename }}
+        BASE_IMAGE: ${{ matrix.baseImage }}
       run: |
         repo_name="ghcr.io/pschichtel/dovecot"
         tmp_image_name="$repo_name:latest"
-        podman build --build-arg DEBIAN_CODENAME="$DEBIAN_CODENAME" -t "$tmp_image_name" .
-        version="$(podman run --rm --entrypoint sh "$tmp_image_name" -c 'dovecot --version | grep -Po "^\S+"')"
+        podman build --build-arg BASE_IMAGE="$BASE_IMAGE" -t "$tmp_image_name" .
+        codename="$(podman run --rm --entrypoint sh "$tmp_image_name" -c 'cat /etc/os-release' | grep '^VERSION_CODENAME=' | cut -d'=' -f2)"
+        version="$(podman run --rm --entrypoint sh "$tmp_image_name" -c 'dovecot --version' | grep -Po '^\S+')"
         major_version="$(echo "$version" | cut -d'.' -f1)"
-        podman tag "$tmp_image_name" "$repo_name:$DEBIAN_CODENAME" "$repo_name:$version-$DEBIAN_CODENAME" "$repo_name:$major_version-$DEBIAN_CODENAME"
-        podman push "$repo_name:$DEBIAN_CODENAME"
-        podman push "$repo_name:$version-$DEBIAN_CODENAME"
-        podman push "$repo_name:$major_version-$DEBIAN_CODENAME"
+        podman tag "$tmp_image_name" "$repo_name:$codename" "$repo_name:$version-$codename" "$repo_name:$major_version-$codename"
+        podman push "$repo_name:$codename"
+        podman push "$repo_name:$version-$codename"
+        podman push "$repo_name:$major_version-$codename"
 
