@@ -1,4 +1,4 @@
 #!/usr/bin/env sh
 
-exec rspamc learn_spam
+exec rspamd-client learnspam
 

@@ -1,5 +1,7 @@
 #!/usr/bin/env sh
 
+set -eu
+
 # this is necessary because the process calling this script might not inherit the env from its parent
 . /etc/default/rspamc
 
@@ -16,7 +18,7 @@ else
     password="${RSPAMD_CONTROLLER_PASSWORD:-}"
 fi
 
-command=${1?no command given!}
+endpoint=${1?no endpoint given!}
 
-curl -s -H "Password: ${password}" --data-binary @- "http://${RSPAMD_CONTROLLER_ADDRESS}/${command}"
+curl -s -H "Password: ${password}" --data-binary @- "http://${RSPAMD_CONTROLLER_ADDRESS}/${endpoint}"
 

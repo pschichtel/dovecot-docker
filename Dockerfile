@@ -14,7 +14,7 @@ RUN apt-get update \
 RUN addgroup --system --gid 5000 vmail \
  && adduser --system --uid 5000 --ingroup vmail --home "/var/lib/vmail" --disabled-login --disabled-password vmail
 
-COPY rspamc.sh /usr/local/bin/rspamc
+COPY rspamd-client.sh /usr/local/bin/rspamd-client
 COPY entrypoint.sh /docker-entrypoint.sh
 
 COPY auth-mailmanager.lua /etc/dovecot/auth-mailmanager.lua
