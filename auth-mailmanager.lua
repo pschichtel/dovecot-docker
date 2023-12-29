@@ -4,7 +4,7 @@ local request_headers = {}
 
 local ltn12 = require("ltn12")
 local http = require("socket.http")
-local json = require("json")
+local json = require("lunajson")
 
 function script_init()
     local confEnv = {}
