@@ -9,7 +9,7 @@ LABEL maintainer="Phillip Schichtel <phillip@schich.tel>"
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update \
- && apt-get install -y --no-install-recommends dovecot-imapd dovecot-lmtpd dovecot-sieve dovecot-managesieved dovecot-solr dovecot-auth-lua lua-socket lua-json rspamd
+ && apt-get install -y --no-install-recommends dovecot-imapd dovecot-lmtpd dovecot-sieve dovecot-managesieved dovecot-solr dovecot-auth-lua lua-socket lua-json curl
 
 RUN addgroup --system --gid 5000 vmail \
  && adduser --system --uid 5000 --ingroup vmail --home "/var/lib/vmail" --disabled-login --disabled-password vmail
