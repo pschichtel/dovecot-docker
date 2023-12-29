@@ -15,7 +15,7 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
     - name: Build the Docker image
       run: |
-        image_name="ghcr.io/pschichtel/dovecot-lua:latest"
+        image_name="ghcr.io/pschichtel/dovecot:bullseye-latest"
         podman build -t "$image_name" .
         podman push "$image_name"
 
