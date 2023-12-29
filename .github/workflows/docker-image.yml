@@ -18,7 +18,7 @@ jobs:
         codename="bullseye"
         repo_name="ghcr.io/pschichtel/dovecot"
         tmp_image_name="$repo_name:latest"
-        podman build -t "$tmp_image_name"
+        podman build -t "$tmp_image_name" .
         version="$(podman run --rm --entrypoint sh "$tmp_image_name" -c 'dovecot --version | grep -Po "^\S+"')"
         major_version="$(echo "$version" | cut -d'.' -f1)"
         podman tag "$tmp_image_name" "$repo_name:$codename" "$repo_name:$version-$codename" "$repo_name:$major_version-$codename"
