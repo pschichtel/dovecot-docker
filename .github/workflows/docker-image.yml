@@ -1,9 +1,16 @@
-name: Docker Image CI
+name: Debian-based Docker Image
 
 on: [ push, workflow_dispatch ]
 
 jobs:
   build:
+    strategy:
+      matrix:
+        codename:
+          - bullseye
+          - bookworm
+          - trixie
+          - sid
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -14,15 +21,16 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     - name: Build the Docker image
+      env:
+        DEBIAN_CODENAME: ${{ matrix.codename }}
       run: |
-        codename="bookworm"
         repo_name="ghcr.io/pschichtel/dovecot"
         tmp_image_name="$repo_name:latest"
-        podman build -t "$tmp_image_name" .
+        podman build --buildarg DEBIAN_CODENAME="$DEBIAN_CODENAME" -t "$tmp_image_name" .
         version="$(podman run --rm --entrypoint sh "$tmp_image_name" -c 'dovecot --version | grep -Po "^\S+"')"
         major_version="$(echo "$version" | cut -d'.' -f1)"
-        podman tag "$tmp_image_name" "$repo_name:$codename" "$repo_name:$version-$codename" "$repo_name:$major_version-$codename"
-        podman push "$repo_name:$codename"
-        podman push "$repo_name:$version-$codename"
-        podman push "$repo_name:$major_version-$codename"
+        podman tag "$tmp_image_name" "$repo_name:$DEBIAN_CODENAME" "$repo_name:$version-$DEBIAN_CODENAME" "$repo_name:$major_version-$DEBIAN_CODENAME"
+        podman push "$repo_name:$DEBIAN_CODENAME"
+        podman push "$repo_name:$version-$DEBIAN_CODENAME"
+        podman push "$repo_name:$major_version-$DEBIAN_CODENAME"
 
