@@ -1,4 +1,4 @@
-ARG BASE_IMAGE="docker.io/library/debian:bullseye"
+ARG BASE_IMAGE="docker.io/library/debian:bookworm"
 
 FROM $BASE_IMAGE
 
