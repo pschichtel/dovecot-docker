@@ -12,8 +12,8 @@ jobs:
           - docker.io/library/debian:trixie-slim
           - docker.io/library/debian:sid-slim
           - docker.io/library/ubuntu:jammy
-          - docker.io/library/ubuntu:mantic
           - docker.io/library/ubuntu:noble
+          - docker.io/library/ubuntu:oracular
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
