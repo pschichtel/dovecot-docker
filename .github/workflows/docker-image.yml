@@ -7,7 +7,6 @@ jobs:
     strategy:
       matrix:
         baseImage:
-          - docker.io/library/debian:bullseye-slim
           - docker.io/library/debian:bookworm-slim
           - docker.io/library/debian:trixie-slim
           - docker.io/library/debian:sid-slim
