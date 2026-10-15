@@ -13,7 +13,7 @@ RUN apt-get update \
 RUN if [ -e /usr/share/lua/5.4 ]; then cp -av /usr/share/lua/5.3/json /usr/share/lua/5.3/json.lua /usr/share/lua/5.4; fi
 
 RUN groupadd --system --gid 5000 vmail \
- && useradd --system --uid 5000 --gid vmail --home-dir "/var/lib/vmail" --create-home --shell /usr/bin/nologin vmail
+ && useradd --system --uid 5000 --gid vmail --home-dir "/var/lib/vmail" --create-home --shell /usr/sbin/nologin vmail
 
 COPY rspamd-client.sh /usr/local/bin/rspamd-client
 COPY entrypoint.sh /docker-entrypoint.sh
